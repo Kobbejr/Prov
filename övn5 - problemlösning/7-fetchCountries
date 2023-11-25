@@ -1,0 +1,55 @@
+// 7.1 (3p) Hämta data med fetch från denna url: https://restcountries.com/v3.1/all
+// Visa följande för varje land:
+// Officiellt namn
+// Valuta
+// bild på flagga med tillhörande alt-text
+
+// 7.2 (3p) Gör sidan responsive:
+// I desktop-vy ska varje land visas i 3 kolumner.
+// I mobil-vy ska varje land visas i en kolumn med 100% width.
+
+// Hämta referensen till elementet med id "countrysContainer" från HTML-dokumentet.
+const countrysContainer = document.getElementById("countrysContainer");
+
+// En asynkron funktion 'fetchData' för att hämta data från det angivna API:et och rendera det på sidan.
+async function fetchData() {
+  // Använd fetch-funktionen för att göra en asynkron anrop till API:et och vänta på svar.
+  const response = await fetch("https://restcountries.com/v3.1/all");
+
+  // Konvertera svaret till JSON-format och vänta på resultatet.
+  const data = await response.json();
+  console.log(data);
+
+  // Loopa igenom varje land i datan och skapa HTML-element för varje land.
+  data.forEach((country) => {
+    // Skapa en div för varje land och sätt klassen till "country".
+    const countryDiv = document.createElement("div");
+    countryDiv.setAttribute("class", "country");
+
+    // Skapa ett h1-element för att visa det officiella namnet på landet.
+    const nameElement = document.createElement("h1");
+    nameElement.textContent = country.name.official;
+
+    // Skapa ett h2-element för att visa valutan (som här antas vara en lista av nycklar).
+    const currencyElement = document.createElement("h2");
+    currencyElement.textContent = Object.keys(country.currencies);
+
+    // Skapa ett img-element för att visa flaggan och sätt attributen baserat på landets data.
+    const flagElement = document.createElement("img");
+    flagElement.src = country.flags.png;
+    flagElement.alt = country.flags.alt;
+    flagElement.width = 150;
+    flagElement.height = 150;
+
+    // Lägg till de skapade elementen som barn till landets div-element.
+    countryDiv.appendChild(nameElement);
+    countryDiv.appendChild(currencyElement);
+    countryDiv.appendChild(flagElement);
+
+    // Lägg till landets div-element som barn till det övergripande container-elementet.
+    countrysContainer.appendChild(countryDiv);
+  });
+}
+
+// Kalla på fetchData-funktionen för att hämta och rendera data när sidan laddas.
+fetchData();
